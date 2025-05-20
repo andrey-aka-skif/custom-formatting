@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="stylesheet" href="src/style.css" />
+  <title>Format Number</title>
+</head>
+
+<body>
+  <div class="centered">
+    <input type="number" step="0.01" id="number" />
+    <div><span id="formatedPercentage"></span>%</div>
+    <div id="formatedNumber">&nbsp;</div>
+
+    <div>
+      <span id="mantissa"></span><span id="multiplication-sign"></span><span id="base"></span><sup id="exponent"></sup>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
