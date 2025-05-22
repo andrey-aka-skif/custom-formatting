@@ -71,10 +71,10 @@ describe('Передаем неподходящие значения', () => {
 })
 
 describe('Передаем корректные значения в виде строки', () => {
-    it('0 -> {,0,,,}. Число равно нулю, вернуть корректный объект', () => {
+    it('0 -> {,0.000,,,}. Число равно нулю, вернуть корректный объект', () => {
         const result = NumberFormatUtils.toStandartFormObject('0')
         expect(result.sign).toBe('')
-        expect(result.mantissa).toBe('0')
+        expect(result.mantissa).toBe('0.000')
         expect(result.base).toBe('')
         expect(result.exponent).toBe('')
     })
@@ -82,9 +82,7 @@ describe('Передаем корректные значения в виде с�
 
 describe('Передаем корректные значения', () => {
     it('-2.16 -> "-2.2". Отрицательное число, вернуть вернуть корректный объект', () => {
-        expect(NumberFormatUtils.toPercentageString(-2.16)).toBe('-2.16')
-
-        const result = NumberFormatUtils.toStandartFormObject(0)
+        const result = NumberFormatUtils.toStandartFormObject(-2.16)
         expect(result.sign).toBe('-')
         expect(result.mantissa).toBe('2.16')
         expect(result.base).toBe('')
@@ -92,10 +90,10 @@ describe('Передаем корректные значения', () => {
     })
 
 
-    it('0 -> {,0,,,}. Число равно нулю, вернуть корректный объект', () => {
+    it('0 -> {,0.000,,,}. Число равно нулю, вернуть корректный объект', () => {
         const result = NumberFormatUtils.toStandartFormObject(0)
         expect(result.sign).toBe('')
-        expect(result.mantissa).toBe('0')
+        expect(result.mantissa).toBe('0.000')
         expect(result.base).toBe('')
         expect(result.exponent).toBe('')
     })

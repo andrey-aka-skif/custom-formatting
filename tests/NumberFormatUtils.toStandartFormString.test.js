@@ -43,8 +43,8 @@ describe('Передаем неподходящие значения', () => {
 })
 
 describe('Передаем корректные значения в виде строки', () => {
-    it('0 -> "0". Число равно нулю, вернуть ноль - 0', () => {
-        expect(NumberFormatUtils.toStandartFormString('0')).toBe('0')
+    it('0 -> "0.000". Число равно нулю, вернуть ноль - 0', () => {
+        expect(NumberFormatUtils.toStandartFormString('0')).toBe('0.000')
     })
 })
 
