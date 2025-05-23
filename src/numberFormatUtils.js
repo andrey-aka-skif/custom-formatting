@@ -9,106 +9,53 @@
     4. Если число больше 1000, то писать в стандартном виде, сохраняя три значащих цифры: 4,52*10^3 Вт
 */
 
+
+/**
+ * Форматирование чисел для отображения в интерфейсе
+ */
 export class NumberFormatUtils {
     static toPercentageString(number) {
-        const formattedNumber = new FormattedNumber(number)
-        return formattedNumber.toStringAsPercentage()
+        const percentagesString = new FormattedPercentage(number)
+        return percentagesString.toString()
     }
 
     static toStandartFormString(number) {
         const formattedNumber = new FormattedNumber(number)
-        return formattedNumber.toStringAsNumber()
+        return formattedNumber.toString()
     }
 
     static toStandartFormObject(number) {
-        return new FormattedNumber(number)
+        const formattedNumber = new FormattedNumber(number)
+        return formattedNumber.toObjectValue()
     }
 }
 
-export class FormattedNumber {
+
+/**
+ * Базовый класс форматированных чисел
+ */
+class BaseFormattedValue {
     rawValue = NaN
+    numericValue = NaN
 
-    #isCalculated = false
-    #numericValue = null
-    #sign = 1
-    #mantissa = null
-    #base = 10
-    #exponent = 0
-
-    get sign() {
-        this.#ensureCalculate()
-        return Math.sign(this.#sign) === -1 ? '-' : ''
-    }
-
-    get mantissa() {
-        this.#ensureCalculate()
-
-        if (this.#mantissa == null)
-            return ''
-
-        if (this.#exponent != 0)
-            return this.#mantissa.toFixed(2)
-
-        const roundedToIntMantissa = Math.round(this.#mantissa)
-
-        if (roundedToIntMantissa >= 100)
-            return this.#mantissa.toFixed(0)
-
-        if (roundedToIntMantissa >= 10)
-            return this.#mantissa.toFixed(1)
-
-        if (roundedToIntMantissa >= 1)
-            return this.#mantissa.toFixed(2)
-
-        return this.#mantissa.toFixed(3)
-    }
-
-    get base() {
-        this.#ensureCalculate()
-        return this.#exponent !== 0 ? this.#base.toString() : ''
-    }
-
-    get exponent() {
-        this.#ensureCalculate()
-        return this.#exponent !== 0 ? this.#exponent.toString() : ''
-    }
+    _isCalculated = false
 
     constructor(value) {
+        if (new.target === BaseFormattedValue)
+            throw new Error('BaseFormattedValue нельзя инстанцировать напрямую')
+
         this.rawValue = value
     }
 
-    #ensureCalculate() {
-        try {
-            if (!this.#isCalculated) {
-                this.#calculateOrThrow()
-            }
-        } catch (error) {
-            this.#mantissa = null
-        } finally {
-            this.#isCalculated = true
+    _ensureCalculateOrThrow() {
+        if (!this._isCalculated) {
+            this.numericValue = this._getValidNumericValueOrThrow()
+            this._calculateOrThrow()
         }
+        this._isCalculated = true
     }
 
-    #calculateOrThrow() {
-        this.#numericValue = this.#getValidNumericValueOrThrow()
-
-        const absValue = Math.abs(this.#numericValue)
-
-        if (absValue === 0)
-            this.#calculateSimpleStandartForm(this.#numericValue, 3)
-        else if (absValue < 0.1 || absValue >= 1000)
-            this.#calculateStandartForm(this.#numericValue)
-        else if (absValue < 1)
-            this.#calculateSimpleStandartForm(this.#numericValue, 3)
-        else if (absValue < 10)
-            this.#calculateSimpleStandartForm(this.#numericValue, 2)
-        else if (absValue < 100)
-            this.#calculateSimpleStandartForm(this.#numericValue, 1)
-        else
-            this.#calculateSimpleStandartForm(this.#numericValue, 0)
-    }
-
-    #getValidNumericValueOrThrow() {
+    _getValidNumericValueOrThrow() {
         if (!isFinite(this.rawValue))
             throw new Error("Значение не может быть представлено числом")
 
@@ -120,17 +67,59 @@ export class FormattedNumber {
         return numericValue
     }
 
-    #roundTo(value, decimalPlaces) {
-        const multiplier = Math.pow(10, decimalPlaces)
-        return Math.round(value * multiplier) / multiplier
+    _calculateOrThrow() { throw new Error('Метод не переопределён') }
+}
+
+
+/**
+ * Форматированный процент
+ */
+class FormattedPercentage extends BaseFormattedValue {
+    _calculateOrThrow() { }
+
+    toString() {
+        try {
+            this._ensureCalculateOrThrow()
+            return this.numericValue.toFixed(1)
+        } catch (error) {
+            return ''
+        }
+    }
+}
+
+
+/**
+ * Форматированное число
+ */
+class FormattedNumber extends BaseFormattedValue {
+    #sign = null
+    #mantissa = null
+    #decimalPlaces = Infinity
+    #base = null
+    #exponent = null
+
+    _calculateOrThrow() {
+        const absValue = Math.abs(this.numericValue)
+
+        if (absValue === 0)
+            this.#calculateSimpleStandartForm(this.numericValue, 3)
+        else if (absValue < 0.1 || absValue >= 1000)
+            this.#calculateStandartForm(this.numericValue)
+        else if (absValue < 1)
+            this.#calculateSimpleStandartForm(this.numericValue, 3)
+        else if (absValue < 10)
+            this.#calculateSimpleStandartForm(this.numericValue, 2)
+        else if (absValue < 100)
+            this.#calculateSimpleStandartForm(this.numericValue, 1)
+        else
+            this.#calculateSimpleStandartForm(this.numericValue, 0)
     }
 
     #calculateStandartForm(value) {
         if (value === 0)
             throw new Error("Невозможно представить ноль в стандартном виде")
 
-        const decimalPlaces = 2
-        let absNum = Math.abs(value)    // возможно, здесь нужно округлить?
+        let absNum = Math.abs(value)
         let exponent = 0
 
         // Для чисел меньше 1
@@ -148,44 +137,51 @@ export class FormattedNumber {
         }
 
         this.#sign = Math.sign(value)
-        this.#mantissa = this.#roundTo(absNum, decimalPlaces)
+        this.#mantissa = Math.abs(absNum)
+        this.#decimalPlaces = 2
+        this.#base = 10
         this.#exponent = exponent
     }
 
     #calculateSimpleStandartForm(value, decimalPlaces = 0) {
         this.#sign = Math.sign(value)
-        this.#mantissa = this.#roundTo(Math.abs(value), decimalPlaces)
+        this.#mantissa = Math.abs(value)
+        this.#decimalPlaces = decimalPlaces
     }
 
-    toString() { return this.toStringAsNumber() }
-
-    toStringAsPercentage() {
+    toObjectValue() {
         try {
-            this.#ensureCalculate()
-            return this.#numericValue.toFixed(1)
+            this._ensureCalculateOrThrow()
+            return {
+                sign: Math.sign(this.#sign) === -1 ? '-' : '',
+                mantissa: this.#mantissa !=0 ? this.#mantissa.toFixed(this.#decimalPlaces) : this.#mantissa.toFixed(2),
+                base: this.#base ? '10' : '',
+                exponent: this.#exponent ? this.#exponent.toString() : '',
+            }
         } catch (error) {
+            return {
+                sign: '',
+                mantissa: '',
+                base: '',
+                exponent: '',
+            }
+        }
+    }
+
+    toValue() { return this.numericValue }
+
+    toString() {
+        var objectValue = this.toObjectValue()
+
+        if (!objectValue.mantissa)
             return ''
-        }
-    }
 
-    toStringAsNumber() {
-        try {
-            this.#ensureCalculate()
-            if (this.#exponent === 0)
-                return `${this.sign}${this.mantissa}`
-            else
-                return `${this.sign}${this.mantissa}×${this.base}^${this.exponent}`
-        } catch (error) {
-            return ''
-        }
-    }
+        if(objectValue.mantissa == 0)
+            return '0.00'
 
-    valueOf() {
-        try {
-            this.#ensureCalculate()
-            return this.#numericValue
-        } catch (error) {
-            return NaN
-        }
+        if (!objectValue.base || !objectValue.exponent)
+            return `${objectValue.sign}${objectValue.mantissa}`
+
+        return `${objectValue.sign}${objectValue.mantissa}×${objectValue.base}^${objectValue.exponent}`
     }
 }
