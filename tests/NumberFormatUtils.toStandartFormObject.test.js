@@ -115,18 +115,18 @@ describe('Передаем корректные значения', () => {
         expect(result.exponent).toBe('4')
     })
 
-    it('1000 -> {"1×10^3"}. Число = 1000, вернуть в стандартном виде', () => {
+    it('1000 -> {"1.00×10^3"}. Число = 1000, вернуть в стандартном виде', () => {
         const result = NumberFormatUtils.toStandartFormObject(1000)
         expect(result.sign).toBe('')
-        expect(result.mantissa).toBe('1')
+        expect(result.mantissa).toBe('1.00')
         expect(result.base).toBe('10')
         expect(result.exponent).toBe('3')
     })
 
-    it('999.99 -> {"1×10^3"}. Число менее 1000 на 0.01, вернуть в стандартном виде', () => {
+    it('999.99 -> {"1.00×10^3"}. Число менее 1000 на 0.01, вернуть в стандартном виде', () => {
         const result = NumberFormatUtils.toStandartFormObject(999.99)
         expect(result.sign).toBe('')
-        expect(result.mantissa).toBe('1')
+        expect(result.mantissa).toBe('1.00')
         expect(result.base).toBe('10')
         expect(result.exponent).toBe('3')
     })

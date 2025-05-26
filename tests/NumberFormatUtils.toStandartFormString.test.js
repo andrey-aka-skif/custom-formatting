@@ -67,12 +67,12 @@ describe('Передаем корректные значения', () => {
         expect(NumberFormatUtils.toStandartFormString(12345)).toBe('1.23×10^4')
     })
 
-    it('1000 -> "1×10^3". Число = 1000, вернуть в стандартном виде', () => {
-        expect(NumberFormatUtils.toStandartFormString(1000)).toBe('1×10^3')
+    it('1000 -> "1.00×10^3". Число = 1000, вернуть в стандартном виде', () => {
+        expect(NumberFormatUtils.toStandartFormString(1000)).toBe('1.00×10^3')
     })
 
-    it('999.99 -> "1×10^3". Число менее 1000 на 0.01, вернуть в стандартном виде', () => {
-        expect(NumberFormatUtils.toStandartFormString(999.99)).toBe('1×10^3')
+    it('999.99 -> "1.00×10^3". Число менее 1000 на 0.01, вернуть в стандартном виде', () => {
+        expect(NumberFormatUtils.toStandartFormString(999.99)).toBe('1.00×10^3')
     })
 
 
