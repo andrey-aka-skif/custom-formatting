@@ -71,17 +71,17 @@ describe('Передаем неподходящие значения', () => {
 })
 
 describe('Передаем корректные значения в виде строки', () => {
-    it('0 -> {,0.000,,,}. Число равно нулю, вернуть корректный объект', () => {
+    it('0 -> {,0.00,,,}. Число равно нулю, вернуть корректный объект', () => {
         const result = NumberFormatUtils.toStandartFormObject('0')
         expect(result.sign).toBe('')
-        expect(result.mantissa).toBe('0.000')
+        expect(result.mantissa).toBe('0.00')
         expect(result.base).toBe('')
         expect(result.exponent).toBe('')
     })
 })
 
 describe('Передаем корректные значения', () => {
-    it('-2.16 -> "-2.2". Отрицательное число, вернуть вернуть корректный объект', () => {
+    it('-2.16 -> "-2.16". Отрицательное число, вернуть вернуть корректный объект', () => {
         const result = NumberFormatUtils.toStandartFormObject(-2.16)
         expect(result.sign).toBe('-')
         expect(result.mantissa).toBe('2.16')
@@ -90,14 +90,22 @@ describe('Передаем корректные значения', () => {
     })
 
 
-    it('0 -> {,0.000,,,}. Число равно нулю, вернуть корректный объект', () => {
+    it('0 -> {,0.00,,,}. Число равно нулю, вернуть корректный объект', () => {
         const result = NumberFormatUtils.toStandartFormObject(0)
         expect(result.sign).toBe('')
-        expect(result.mantissa).toBe('0.000')
+        expect(result.mantissa).toBe('0.00')
         expect(result.base).toBe('')
         expect(result.exponent).toBe('')
     })
 
+
+    it('-12345 -> {"1.23×10^4"}. Число < 1000, вернуть в стандартном виде', () => {
+        const result = NumberFormatUtils.toStandartFormObject(-12345)
+        expect(result.sign).toBe('-')
+        expect(result.mantissa).toBe('1.23')
+        expect(result.base).toBe('10')
+        expect(result.exponent).toBe('4')
+    })
 
     it('12345 -> {"1.23×10^4"}. Число > 1000, вернуть в стандартном виде', () => {
         const result = NumberFormatUtils.toStandartFormObject(12345)

@@ -43,21 +43,25 @@ describe('Передаем неподходящие значения', () => {
 })
 
 describe('Передаем корректные значения в виде строки', () => {
-    it('0 -> "0.000". Число равно нулю, вернуть ноль - 0', () => {
-        expect(NumberFormatUtils.toStandartFormString('0')).toBe('0.000')
+    it('0 -> "0.00". Число равно нулю, вернуть ноль - 0', () => {
+        expect(NumberFormatUtils.toStandartFormString('0')).toBe('0.00')
     })
 })
 
 describe('Передаем корректные значения', () => {
-    it('-2.16 -> "-2.2". Отрицательное число, вернуть число, округленное по банковским правилам в большую сторону', () => {
-        expect(NumberFormatUtils.toPercentageString(-2.16)).toBe('-2.16')
+    it('-2.16 -> "-2.16". Отрицательное число, вернуть число, округленное по банковским правилам в большую сторону', () => {
+        expect(NumberFormatUtils.toStandartFormString(-2.16)).toBe('-2.16')
     })
 
 
-    it('0 -> "0". Число равно нулю, вернуть ноль - 0', () => {
-        expect(NumberFormatUtils.toStandartFormString(0)).toBe('0')
+    it('0 -> "0.00". Число равно нулю, вернуть ноль - 0', () => {
+        expect(NumberFormatUtils.toStandartFormString(0)).toBe('0.00')
     })
 
+
+    it('-12345 -> "1.23×10^4". Число < 1000, вернуть в стандартном виде', () => {
+        expect(NumberFormatUtils.toStandartFormString(-12345)).toBe('-1.23×10^4')
+    })
 
     it('12345 -> "1.23×10^4". Число > 1000, вернуть в стандартном виде', () => {
         expect(NumberFormatUtils.toStandartFormString(12345)).toBe('1.23×10^4')
