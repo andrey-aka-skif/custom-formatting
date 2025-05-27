@@ -1,6 +1,17 @@
-import { defineConfig } from 'vite';
-import path from 'path';
+import { defineConfig } from 'vite'
+import path from 'path'
 
 export default defineConfig({
-    root: path.resolve(__dirname, 'samples')
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, 'src/index.js'),
+            name: 'NumberFormating',
+            fileName: (format) => `number-formating.${format}.js`,
+        },
+        outDir: 'dist',
+        emptyOutDir: true,
+    },
+    server: {
+        open: '/samples/index.html'
+    }
 })
