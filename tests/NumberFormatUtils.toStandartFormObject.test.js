@@ -181,8 +181,8 @@ describe('Передаем корректные значения', () => {
         expect(result.exponent).toBe('')
     })
 
-    it('9.99 -> {"10.0"}. Число менее 10 на 0.01, вернуть десятичное число с одним знаком после запятой', () => {
-        const result = NumberFormatUtils.toStandartFormObject(9.99)
+    it('9.999 -> {"10.0"}. Число менее 10 на 0.001, вернуть десятичное число с одним знаком после запятой', () => {
+        const result = NumberFormatUtils.toStandartFormObject(9.999)
         expect(result.sign).toBe('')
         expect(result.mantissa).toBe('10.0')
         expect(result.base).toBe('')
@@ -214,8 +214,8 @@ describe('Передаем корректные значения', () => {
         expect(result.exponent).toBe('')
     })
 
-    it('0.99 -> {"1.00"}. Число менее 1 на 0.01, вернуть десятичное число с двумя знаками после запятой', () => {
-        const result = NumberFormatUtils.toStandartFormObject(0.99)
+    it('0.9999 -> {"1.00"}. Число менее 1 на 0.0001, вернуть десятичное число с двумя знаками после запятой', () => {
+        const result = NumberFormatUtils.toStandartFormObject(0.9999)
         expect(result.sign).toBe('')
         expect(result.mantissa).toBe('1.00')
         expect(result.base).toBe('')
@@ -247,8 +247,8 @@ describe('Передаем корректные значения', () => {
         expect(result.exponent).toBe('')
     })
 
-    it('0.09 -> {"0.100"}. Число менее 0.1 на 0.01, вернуть десятичное число с тремя знаками после запятой', () => {
-        const result = NumberFormatUtils.toStandartFormObject(0.09)
+    it('0.0999 -> {"0.100"}. Число менее 0.1 на 0.0001, вернуть десятичное число с тремя знаками после запятой', () => {
+        const result = NumberFormatUtils.toStandartFormObject(0.0999)
         expect(result.sign).toBe('')
         expect(result.mantissa).toBe('0.100')
         expect(result.base).toBe('')

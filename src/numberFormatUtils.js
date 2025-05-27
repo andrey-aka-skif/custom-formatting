@@ -51,8 +51,8 @@ class BaseFormattedValue {
         if (!this._isCalculated) {
             this.numericValue = this._getValidNumericValueOrThrow()
             this._calculateOrThrow()
+            this._isCalculated = true
         }
-        this._isCalculated = true
     }
 
     _getValidNumericValueOrThrow() {
@@ -65,6 +65,11 @@ class BaseFormattedValue {
             throw new Error("Значение является NaN")
 
         return numericValue
+    }
+
+    _roundTo(value, decimalPlaces) {
+        const multiplier = Math.pow(10, decimalPlaces)
+        return Math.round(value * multiplier) / multiplier
     }
 
     _calculateOrThrow() { throw new Error('Метод не переопределён') }
@@ -101,18 +106,43 @@ class FormattedNumber extends BaseFormattedValue {
     _calculateOrThrow() {
         const absValue = Math.abs(this.numericValue)
 
-        if (absValue === 0)
+        if (absValue === 0) {
             this.#calculateSimpleStandartForm(this.numericValue, 3)
-        else if (absValue < 0.1 || absValue >= 1000)
-            this.#calculateStandartForm(this.numericValue)
-        else if (absValue < 1)
-            this.#calculateSimpleStandartForm(this.numericValue, 3)
-        else if (absValue < 10)
-            this.#calculateSimpleStandartForm(this.numericValue, 2)
-        else if (absValue < 100)
-            this.#calculateSimpleStandartForm(this.numericValue, 1)
-        else
-            this.#calculateSimpleStandartForm(this.numericValue, 0)
+            return
+        }
+
+        const valueLessThanOneTenth = this._roundTo(absValue, 2)
+        if (valueLessThanOneTenth < 0.1) {
+            this.#calculateStandartForm(absValue)
+            return
+        }
+
+        const valueLessThanOne = this._roundTo(absValue, 3)
+        if (valueLessThanOne < 1) {
+            this.#calculateSimpleStandartForm(valueLessThanOne, 3)
+            return
+        }
+
+        const valueLessThanTen = this._roundTo(absValue, 2)
+        if (valueLessThanTen < 10) {
+            this.#calculateSimpleStandartForm(valueLessThanTen, 2)
+            return
+        }
+
+        const valueLessThanHundred = this._roundTo(absValue, 1)
+        if (valueLessThanHundred < 100) {
+            this.#calculateSimpleStandartForm(valueLessThanHundred, 1)
+            return
+        }
+
+        const valueLessThanThousand = this._roundTo(absValue, 0)
+        if (valueLessThanThousand < 1000) {
+            this.#calculateSimpleStandartForm(valueLessThanThousand, 0)
+            return
+        }
+
+        const valueMoreThanThousand = this._roundTo(absValue, 0)
+        this.#calculateStandartForm(valueMoreThanThousand)
     }
 
     #calculateStandartForm(value) {
@@ -136,7 +166,7 @@ class FormattedNumber extends BaseFormattedValue {
             }
         }
 
-        this.#sign = Math.sign(value)
+        this.#sign = Math.sign(this.numericValue)
         this.#mantissa = Math.abs(absNum)
         this.#decimalPlaces = 2
         this.#base = 10
@@ -144,7 +174,7 @@ class FormattedNumber extends BaseFormattedValue {
     }
 
     #calculateSimpleStandartForm(value, decimalPlaces = 0) {
-        this.#sign = Math.sign(value)
+        this.#sign = Math.sign(this.numericValue)
         this.#mantissa = Math.abs(value)
         this.#decimalPlaces = decimalPlaces
     }
@@ -154,7 +184,7 @@ class FormattedNumber extends BaseFormattedValue {
             this._ensureCalculateOrThrow()
             return {
                 sign: Math.sign(this.#sign) === -1 ? '-' : '',
-                mantissa: this.#mantissa !=0 ? this.#mantissa.toFixed(this.#decimalPlaces) : this.#mantissa.toFixed(2),
+                mantissa: this.#mantissa != 0 ? this.#mantissa.toFixed(this.#decimalPlaces) : this.#mantissa.toFixed(2),
                 base: this.#base ? '10' : '',
                 exponent: this.#exponent ? this.#exponent.toString() : '',
             }
@@ -176,7 +206,7 @@ class FormattedNumber extends BaseFormattedValue {
         if (!objectValue.mantissa)
             return ''
 
-        if(objectValue.mantissa == 0)
+        if (objectValue.mantissa == 0)
             return '0.00'
 
         if (!objectValue.base || !objectValue.exponent)
