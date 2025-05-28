@@ -9,7 +9,7 @@ export default class BaseNumericFormattedValue {
 
     constructor(value) {
         if (new.target === BaseNumericFormattedValue)
-            throw new Error('BaseFormattedValue нельзя инстанцировать напрямую')
+            throw new Error(`${new.target.name} нельзя инстанцировать напрямую`);
 
         this.rawValue = value
     }
