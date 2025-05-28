@@ -5,11 +5,9 @@ export default defineConfig({
     build: {
         lib: {
             entry: path.resolve(__dirname, 'src/index.js'),
-            name: 'NumberFormating',
-            fileName: (format) => `number-formating.${format}.js`,
+            name: 'customFormatting',
+            fileName: (format) => `index.${format}.js`
         },
-        outDir: 'dist',
-        emptyOutDir: true,
     },
     server: {
         open: '/samples/index.html'

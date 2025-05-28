@@ -2,8 +2,20 @@
   "name": "custom-formatting",
   "version": "1.0.0",
   "description": "Форматирование входных значений по указанным правилам (метрологическим и т.д.)",
-  "main": "dist/index.js",
+  "keywords": [
+    "formatting",
+    "metrology"
+  ],
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
