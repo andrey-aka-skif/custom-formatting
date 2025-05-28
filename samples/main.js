@@ -1,4 +1,4 @@
-import { NumberFormatUtils } from '../src/numberFormatUtils'
+import FormattingUtility from '../src/FormattingUtility'
 
 var input = document.querySelector('#number')
 var formattedNumberNode = document.querySelector('#formatedNumber')
@@ -10,9 +10,9 @@ var baseNode = document.querySelector('#base')
 var exponentNode = document.querySelector('#exponent')
 
 input.addEventListener('input', () => {
-  const percentagesString = NumberFormatUtils.toPercentageString(input.value)
-  const numberString = NumberFormatUtils.toStandartFormString(input.value)
-  const numberOnject = NumberFormatUtils.toStandartFormObject(input.value)
+  const percentagesString = FormattingUtility.toPercentageString(input.value)
+  const numberString = FormattingUtility.toStandartFormString(input.value)
+  const numberOnject = FormattingUtility.toStandartFormObject(input.value)
 
   formattedNumberNode.innerHTML = numberString
   formattedPercentageNode.innerHTML = percentagesString

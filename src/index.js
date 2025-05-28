@@ -1,3 +1,3 @@
-import { NumberFormatUtils } from "./numberFormatUtils"
+import FormattingUtility from "./FormattingUtility"
 
-export default { NumberFormatUtils }
+export default FormattingUtility 
