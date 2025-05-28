@@ -1,6 +1,8 @@
 {
-  "name": "number-formatting",
+  "name": "custom-formatting",
   "version": "1.0.0",
+  "description": "Форматирование входных значений по указанным правилам (метрологическим и т.д.)",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "dev": "vite",
