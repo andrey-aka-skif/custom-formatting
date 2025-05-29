@@ -1,4 +1,4 @@
-import FormattingUtility from '../src/FormattingUtility'
+import { FormattingUtility } from '../src'
 
 var input = document.querySelector('#number')
 var formattedNumberNode = document.querySelector('#formatedNumber')
