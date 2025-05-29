@@ -1,13 +1,14 @@
 import { FormattingUtility } from '../src'
 
-var input = document.querySelector('#number')
-var formattedNumberNode = document.querySelector('#formatedNumber')
-var formattedPercentageNode = document.querySelector('#formatedPercentage')
+const input = document.querySelector('#number')
+const formattedNumberNode = document.querySelector('#formatedNumber')
+const formattedPercentageNode = document.querySelector('#formatedPercentage')
 
-var mantissaNode = document.querySelector('#mantissa')
-var multiplicationSignNode = document.querySelector('#multiplication-sign')
-var baseNode = document.querySelector('#base')
-var exponentNode = document.querySelector('#exponent')
+const signNode = document.querySelector('#sign')
+const mantissaNode = document.querySelector('#mantissa')
+const multiplicationSignNode = document.querySelector('#multiplication-sign')
+const baseNode = document.querySelector('#base')
+const exponentNode = document.querySelector('#exponent')
 
 input.addEventListener('input', () => {
   const percentagesString = FormattingUtility.toPercentageString(input.value)
@@ -17,6 +18,7 @@ input.addEventListener('input', () => {
   formattedNumberNode.innerHTML = numberString
   formattedPercentageNode.innerHTML = percentagesString
 
+  signNode.innerHTML = numberOnject.sign
   mantissaNode.innerHTML = numberOnject.mantissa
 
   if (numberOnject.exponent !== '') {
